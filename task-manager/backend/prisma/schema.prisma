@@ -1,0 +1,62 @@
+// backend/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Enums for fixed values (Required by prompt)
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum Status {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+}
+
+// 2. User Model
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String    // Stores bcrypt hash
+  name          String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relationships
+  tasksCreated  Task[]    @relation("TaskCreator")
+  tasksAssigned Task[]    @relation("TaskAssignee")
+}
+
+// 3. Task Model
+model Task {
+  id          String    @id @default(uuid())
+  title       String    @db.VarChar(100) // Requirement: Max 100 chars
+  description String?   @db.Text         // Requirement: Multi-line
+  dueDate     DateTime
+  
+  // Enums with defaults
+  priority    Priority  @default(MEDIUM)
+  status      Status    @default(TODO)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relationship: Creator (Mandatory)
+  creatorId   String
+  creator     User      @relation("TaskCreator", fields: [creatorId], references: [id])
+
+  // Relationship: Assignee (Optional - a task might not be assigned yet)
+  assignedToId String?
+  assignee     User?    @relation("TaskAssignee", fields: [assignedToId], references: [id])
+}

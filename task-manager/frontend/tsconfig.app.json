@@ -1,0 +1,29 @@
+// task-manager-assessment/frontend/tsconfig.app.json
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": false,     // CHANGED: Set to false to allow standard imports
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting - Relaxed for Assessment Speed */
+    "strict": true,
+    "noUnusedLocals": false,           // CHANGED: Don't break build on unused vars
+    "noUnusedParameters": false,       // CHANGED: Don't break build on unused params
+    // "erasableSyntaxOnly": true,     // DELETED: This was the cause of your Enum error!
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src"]
+}
