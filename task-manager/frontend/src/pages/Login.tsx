@@ -1,19 +1,19 @@
 // frontend/src/pages/Login.tsx
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import api from '../lib/axios';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Layers, 
-  Mail, 
-  Lock, 
-  User, 
-  ArrowRight, 
-  Loader2,
+import {
   AlertCircle,
+  ArrowRight,
+  Layers,
+  Loader2,
+  Lock,
+  Mail,
   Moon,
-  Sun
+  Sun,
+  User
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import api from '../lib/axios';
 
 export const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -165,6 +165,44 @@ export const Login = () => {
             )}
           </button>
         </form>
+
+        {/* Guest Login Button */}
+        {!isRegistering && (
+          <button 
+            onClick={async () => {
+              setIsLoading(true);
+              setErrorMsg('');
+              try {
+                const res = await api.post('/auth/login', {
+                  email: 'Guest123@example.com',
+                  password: '123456'
+                });
+                
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('user', JSON.stringify(res.data.user));
+                
+                navigate('/dashboard');
+              } catch (error: any) {
+                console.error(error);
+                const msg = error.response?.data?.message || "Guest login failed. Please try again.";
+                setErrorMsg(msg);
+              } finally {
+                setIsLoading(false);
+              }
+            }}
+            disabled={isLoading}
+            className="w-full mt-4 bg-gradient-to-r from-indigo-500 to-violet-500 text-white py-3 rounded-xl font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <>
+                <User size={18} />
+                Continue as Guest
+              </>
+            )}
+          </button>
+        )}
 
         {/* Toggle Mode */}
         <div className="mt-8 text-center">

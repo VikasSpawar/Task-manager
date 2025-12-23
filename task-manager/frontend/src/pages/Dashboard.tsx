@@ -1,24 +1,23 @@
 
+import { format, isToday, isTomorrow } from 'date-fns';
+import {
+    AlertCircle,
+    ArrowUpDown,
+    Calendar,
+    Clock,
+    GripVertical,
+    Layers,
+    LayoutGrid,
+    List as ListIcon,
+    LogOut,
+    Moon,
+    Plus,
+    Search,
+    Sun,
+    Zap
+} from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import useSWR, { mutate } from 'swr';
-import { format, isToday, isTomorrow, formatDistanceToNow } from 'date-fns';
-import { 
-  Layers, 
-  LogOut, 
-  Moon, 
-  Sun, 
-  Plus, 
-  Calendar,
-  Search,
-  Zap,
-  GripVertical,
-  ArrowUpDown,
-  LayoutGrid,
-  List as ListIcon,
-  CheckCircle2,
-  Clock,
-  AlertCircle
-} from 'lucide-react';
 
 import { CreateTaskModal } from '../components/CreateTaskModal';
 import api from '../lib/axios';
@@ -196,6 +195,22 @@ export const Dashboard: React.FC = () => {
               />
             </div>
             <div className="h-8 w-[1px] bg-gray-200 dark:bg-gray-700 mx-2 hidden md:block" />
+            
+            {/* User Profile */}
+            <div className="hidden md:flex items-center gap-3 px-3 py-2 rounded-xl bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center text-white text-xs font-bold">
+                {currentUser?.name?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase() || 'U'}
+              </div>
+              <div className="flex flex-col">
+                <p className="text-xs font-bold text-gray-700 dark:text-gray-200">
+                  {currentUser?.name || 'User'}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {currentUser?.email}
+                </p>
+              </div>
+            </div>
+            
             <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-all">
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </button>
